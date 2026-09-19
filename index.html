@@ -1,0 +1,983 @@
+<!doctype html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#f8fafc" />
+  <title>Crown AI — Think Beyond Limits</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+  <style>
+    :root { color-scheme: light; }
+    html.dark { color-scheme: dark; }
+    html, body { width:100%; height:100%; margin:0; overflow:hidden; }
+    body { font-family:"DM Sans",ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; letter-spacing:-.008em; }
+    h1,h2,h3,.font-display,#chatTitle { font-family:"Manrope","DM Sans",sans-serif; letter-spacing:-.035em; }
+    body { height:100dvh; min-height:0; overflow:hidden; }
+    .app-shell { width:100%; height:100dvh; min-height:0; overflow:hidden; }
+    .scrollbar-thin { scrollbar-width: thin; }
+    .prose-ai pre { overflow-x:auto; border-radius:14px; padding:14px; background:#0f172a; color:#e2e8f0; }
+    .prose-ai code:not(pre code) { padding:.12rem .35rem; border-radius:.4rem; background:rgba(148,163,184,.18); }
+    .prose-ai p { margin:.45rem 0; }
+    .prose-ai ul,.prose-ai ol { margin:.45rem 0; padding-left:1.35rem; }
+    .prose-ai ul { list-style:disc; } .prose-ai ol { list-style:decimal; }
+    .prose-ai h1,.prose-ai h2,.prose-ai h3 { font-weight:700; margin:.75rem 0 .35rem; }
+    .prose-ai a { text-decoration:underline; }
+    .safe-bottom { padding-bottom:max(12px, env(safe-area-inset-bottom)); }
+    textarea { max-height: 180px; }
+    body{
+      background:
+        radial-gradient(900px 520px at 78% -10%, rgba(99,102,241,.10), transparent 60%),
+        radial-gradient(700px 420px at 20% 110%, rgba(14,165,233,.08), transparent 55%),
+        #fff;
+    }
+    html.dark body{
+      background:
+        radial-gradient(900px 520px at 78% -10%, rgba(99,102,241,.16), transparent 60%),
+        radial-gradient(700px 420px at 20% 110%, rgba(14,165,233,.10), transparent 55%),
+        #020617;
+    }
+    #sidebar{backdrop-filter:blur(24px)}
+    .brand-orb{
+      width:34px;height:34px;border-radius:12px;display:grid;place-items:center;
+      color:white;font-weight:900;background:linear-gradient(145deg,#111827,#4f46e5);
+      box-shadow:0 10px 28px rgba(79,70,229,.20)
+    }
+    .premium-input{box-shadow:0 16px 50px rgba(15,23,42,.09)}
+    html.dark .premium-input{box-shadow:0 18px 60px rgba(0,0,0,.35)}
+    .welcome-orb{
+      width:68px;height:68px;margin:auto;border-radius:24px;display:grid;place-items:center;
+      font-size:30px;color:#fff;background:linear-gradient(135deg,#6366f1,#0ea5e9 55%,#22c55e);
+      box-shadow:0 18px 55px rgba(79,70,229,.25)
+    }
+    .suggestion-card{transition:transform .18s ease,border-color .18s ease,background .18s ease}
+    .suggestion-card:hover{transform:translateY(-2px)}
+.crown-logo { width:42px;height:42px;border-radius:14px;object-fit:cover;box-shadow:0 0 28px rgba(34,211,238,.22); }
+    .crown-splash { position:fixed;inset:0;z-index:120;display:grid;place-items:center;background:#050816;transition:opacity .5s ease,visibility .5s ease; }
+    .crown-splash.hide { opacity:0;visibility:hidden;pointer-events:none; }
+    .splash-logo { width:148px;height:148px;border-radius:50%;object-fit:cover;animation:crownPulse 1.65s ease-in-out infinite,crownSpin 8s linear infinite;box-shadow:0 0 38px rgba(34,211,238,.32),0 0 80px rgba(124,58,237,.22); }
+    .splash-ring { position:absolute;width:178px;height:178px;border-radius:50%;border:1px solid rgba(34,211,238,.35);animation:ringPulse 1.65s ease-in-out infinite; }
+    @keyframes crownPulse { 0%,100%{transform:scale(.96);filter:brightness(.95)}50%{transform:scale(1.04);filter:brightness(1.2)} }
+    @keyframes crownSpin { to{rotate:360deg} }
+    @keyframes ringPulse {0%,100%{transform:scale(.9);opacity:.25}50%{transform:scale(1.08);opacity:.8}}
+    .auth-card { width:min(92vw,440px);border:1px solid rgba(148,163,184,.18);background:rgba(8,13,27,.94);backdrop-filter:blur(26px);box-shadow:0 30px 100px rgba(0,0,0,.48); }
+    .auth-provider { transition:.18s ease; } .auth-provider:hover{transform:translateY(-1px);}
+    .crown-gradient-text{background:linear-gradient(90deg,#fff,#60a5fa,#a855f7);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .status-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 10px #22c55e}
+    .voice-live{animation:voiceGlow 1s ease-in-out infinite}
+    .processing-logo{width:34px;height:34px;border-radius:50%;object-fit:cover;animation:crownThink 1.1s ease-in-out infinite;box-shadow:0 0 24px rgba(34,211,238,.25)}
+    @keyframes crownThink{0%,100%{transform:scale(.92);filter:brightness(.8)}50%{transform:scale(1.08);filter:brightness(1.25)}}
+    @keyframes voiceGlow{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.25)}50%{box-shadow:0 0 0 10px rgba(239,68,68,0)}}
+    .voice-panel{position:fixed;inset:0;z-index:105;display:none;place-items:center;background:rgba(2,6,23,.86);backdrop-filter:blur(22px)}
+    .voice-panel.open{display:grid}
+    .voice-wave{display:flex;height:56px;align-items:center;gap:5px}
+    .voice-wave i{display:block;width:5px;border-radius:999px;background:linear-gradient(#22d3ee,#8b5cf6);animation:wave 1s ease-in-out infinite}
+    .voice-wave i:nth-child(2){animation-delay:.1s}.voice-wave i:nth-child(3){animation-delay:.2s}.voice-wave i:nth-child(4){animation-delay:.3s}.voice-wave i:nth-child(5){animation-delay:.4s}
+    @keyframes wave{0%,100%{height:12px}50%{height:48px}}
+
+    @media (max-width: 767px) {
+      #sidebar { position:fixed; top:0; bottom:0; left:0; z-index:50; width:min(86vw,320px); height:100dvh; transform:translateX(-100%); transition:transform .22s ease; }
+      #sidebar.open { transform:translateX(0); }
+      #overlay { display:none; position:fixed; inset:0; z-index:40; background:rgba(15,23,42,.38); }
+      #overlay.open { display:block; }
+    }
+  </style>
+</head>
+<body class="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+  <div id="crownSplash" class="crown-splash">
+    <div class="relative grid place-items-center">
+      <div class="splash-ring"></div>
+      <img class="splash-logo" src="assets/crown-ai-logo.png" alt="Crown AI">
+      <div class="mt-7 text-center">
+        <div class="font-display text-2xl font-extrabold text-white">Crown AI</div>
+        <div class="mt-1 text-xs tracking-[.25em] text-slate-400">THINK BEYOND LIMITS</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="authModal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-[#030712]/80 p-4 backdrop-blur-xl">
+    <div class="auth-card rounded-[30px] p-6 text-white sm:p-8">
+      <div class="text-center">
+        <img class="mx-auto h-16 w-16 rounded-2xl object-cover" src="assets/crown-ai-logo.png" alt="Crown AI">
+        <h2 class="font-display mt-4 text-2xl font-extrabold">Welcome to Crown AI</h2>
+        <p class="mt-2 text-sm text-slate-400">Sign in to continue your AI workspace</p>
+      </div>
+      <div class="mt-6 space-y-3">
+        <button id="googleLogin" class="auth-provider w-full rounded-2xl bg-white px-4 py-3 font-semibold text-slate-900">G&nbsp;&nbsp; Continue with Google</button>
+        <button id="appleLogin" class="auth-provider w-full rounded-2xl border border-slate-700 bg-black px-4 py-3 font-semibold text-white">●&nbsp;&nbsp; Continue with Apple</button>
+        <div class="flex items-center gap-3 py-1 text-xs text-slate-500"><span class="h-px flex-1 bg-slate-800"></span>OR<span class="h-px flex-1 bg-slate-800"></span></div>
+        <input id="authEmail" type="email" class="w-full rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 outline-none focus:border-blue-500" placeholder="Email address">
+        <button id="emailLogin" class="w-full rounded-2xl bg-gradient-to-r from-blue-500 to-violet-600 px-4 py-3 font-semibold">Continue with Email</button>
+        <button id="guestLogin" class="w-full py-2 text-sm text-slate-400 hover:text-white">Continue as guest</button>
+      </div>
+      <p id="authNotice" class="mt-4 hidden rounded-xl bg-amber-500/10 p-3 text-xs leading-5 text-amber-300"></p>
+    </div>
+  </div>
+
+  <div id="loading" class="fixed inset-0 z-[100] grid place-items-center bg-white text-slate-700 dark:bg-slate-950 dark:text-slate-200">Loading App...</div>
+
+  <div id="app" class="app-shell flex">
+    <div id="overlay"></div>
+
+    <aside id="sidebar" class="w-72 shrink-0 border-r border-slate-200 bg-[#f7f7f8] dark:border-slate-800 dark:bg-[#0d0f13] md:relative md:translate-x-0">
+      <div class="flex h-[100dvh] min-h-0 flex-col overflow-hidden">
+        <div class="flex items-center gap-2 px-3 pt-4 pb-3">
+          <img class="crown-logo" src="assets/crown-ai-logo.png" alt="Crown AI logo">
+          <div class="min-w-0 flex-1"><div class="font-display font-extrabold">Crown AI</div><div class="text-[11px] font-medium text-slate-400">Think Beyond Limits</div></div>
+          <button id="closeSidebarBtn" class="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-800 md:hidden" aria-label="Close sidebar">✕</button>
+        </div>
+        <div class="px-3 pb-3">
+          <button id="newChatBtn" class="w-full rounded-2xl bg-slate-900 px-4 py-3 text-left text-sm font-semibold text-white shadow-sm hover:opacity-90 dark:bg-white dark:text-slate-950">＋ &nbsp;New conversation</button>
+        </div>
+        <div class="hidden">
+        </div>
+        <div class="px-2 pb-3">
+          <div class="space-y-1">
+            <button id="libraryBtn" class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-slate-600 hover:bg-slate-200/70 dark:text-slate-300 dark:hover:bg-white/5"><span class="grid h-7 w-7 place-items-center rounded-lg bg-violet-500/10 text-violet-500">▦</span><span class="flex-1">Library</span><span id="libraryCount" class="text-[10px] text-slate-400">0</span></button>
+            <button id="projectsBtn" class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-slate-600 hover:bg-slate-200/70 dark:text-slate-300 dark:hover:bg-white/5"><span class="grid h-7 w-7 place-items-center rounded-lg bg-blue-500/10 text-blue-500">◇</span><span class="flex-1">Projects</span><span class="text-slate-400">›</span></button>
+            <button id="exploreBtn" class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-slate-600 hover:bg-slate-200/70 dark:text-slate-300 dark:hover:bg-white/5"><span class="grid h-7 w-7 place-items-center rounded-lg bg-cyan-500/10 text-cyan-500">✦</span><span class="flex-1">Explore</span></button>
+            <button id="moreBtn" class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-slate-600 hover:bg-slate-200/70 dark:text-slate-300 dark:hover:bg-white/5"><span class="grid h-7 w-7 place-items-center rounded-lg bg-slate-500/10 text-slate-500">•••</span><span class="flex-1">More</span><span class="text-slate-400">⌄</span></button>
+            <div id="moreMenu" class="hidden space-y-1 pl-10">
+              <button id="savedPromptsBtn" class="w-full rounded-lg px-3 py-2 text-left text-xs text-slate-500 hover:bg-slate-200/70 dark:hover:bg-white/5">Saved prompts</button>
+              <button id="dataControlsBtn" class="w-full rounded-lg px-3 py-2 text-left text-xs text-slate-500 hover:bg-slate-200/70 dark:hover:bg-white/5">Data controls</button>
+              <button id="helpBtn" class="w-full rounded-lg px-3 py-2 text-left text-xs text-slate-500 hover:bg-slate-200/70 dark:hover:bg-white/5">Help & shortcuts</button>
+            </div>
+          </div>
+        </div>
+        <div class="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">Recent chats</div>
+        <div id="chatList" class="scrollbar-thin min-h-0 flex-1 overflow-y-auto px-2 pb-3"></div>
+        <div class="shrink-0 border-t border-slate-200/80 bg-[#f7f7f8]/95 p-3 backdrop-blur-xl dark:border-slate-800 dark:bg-[#0d0f13]/95">
+          <div class="mb-2 flex items-center gap-3 rounded-2xl border border-slate-200 bg-white/80 p-2.5 shadow-sm dark:border-slate-800 dark:bg-white/5">
+            <img class="h-9 w-9 rounded-xl object-cover" src="assets/crown-ai-logo.png" alt="Crown AI">
+            <div class="min-w-0 flex-1">
+              <div class="truncate text-sm font-bold">Crown AI</div>
+              <div class="flex items-center gap-1.5 text-[10px] text-slate-400"><span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>Ready</div>
+            </div>
+            <button id="sidebarAccountBtn" class="rounded-lg px-2 py-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-white/10 dark:hover:text-white" title="Account">•••</button>
+          </div>
+          <button id="settingsBtn" class="w-full rounded-xl px-3 py-2 text-left text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-800">⚙ &nbsp;Settings</button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+      <header class="shrink-0 sticky top-0 z-20 border-b border-slate-200/60 bg-white/75 px-3 py-2.5 backdrop-blur-2xl dark:border-white/5 dark:bg-[#070a12]/80 sm:px-5">
+        <div class="mx-auto flex max-w-[1500px] items-center gap-3">
+          <button id="menuBtn" class="rounded-xl p-2 hover:bg-slate-100 dark:hover:bg-white/5 md:hidden" aria-label="Open sidebar">☰</button>
+          <div class="flex min-w-0 flex-1 items-center gap-3">
+            <div class="relative hidden sm:block">
+              <img class="h-9 w-9 rounded-xl object-cover shadow-lg shadow-indigo-500/10" src="assets/crown-ai-logo.png" alt="">
+              <span class="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-emerald-400 dark:border-[#070a12]"></span>
+            </div>
+            <div class="min-w-0">
+              <div id="chatTitle" class="truncate font-display text-[15px] font-extrabold tracking-tight">New chat</div>
+              <div class="mt-0.5 flex items-center gap-1.5 text-[11px] font-medium text-slate-400"><span class="h-1.5 w-1.5 rounded-full bg-emerald-400 sm:hidden"></span><span>Crown AI</span><span class="text-slate-300 dark:text-slate-700">•</span><span>Ready</span></div>
+            </div>
+          </div>
+        <button id="toolsBtn" class="rounded-xl border border-transparent px-3 py-2 text-xs font-bold text-slate-500 hover:border-slate-200 hover:bg-white dark:text-slate-400 dark:hover:border-slate-800 dark:hover:bg-white/5" title="Tools">Tools</button>
+        <button id="searchChatsBtn" class="rounded-xl border border-transparent p-2 text-slate-500 transition hover:border-slate-200 hover:bg-white dark:text-slate-400 dark:hover:border-slate-800 dark:hover:bg-white/5" title="Search chats" aria-label="Search chats">⌕</button>
+        <button id="accountBtn" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-white/5 dark:hover:bg-white/10">Login</button>
+        <button id="themeBtn" class="rounded-xl p-2 hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Toggle theme">🌙</button>
+        </div>
+      </header>
+
+      <section id="messages" class="scrollbar-thin min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-6 sm:px-6">
+        <div id="messageInner" class="mx-auto w-full max-w-3xl"></div>
+      </section>
+
+      <div class="shrink-0 sticky bottom-0 z-20 bg-gradient-to-t from-white via-white to-white/0 px-3 pt-3 dark:from-slate-950 dark:via-slate-950 sm:px-6 safe-bottom">
+        <div class="mx-auto max-w-3xl">
+          <div class="mb-2 flex justify-center"><button id="jumpLatestBtn" class="hidden rounded-full border border-slate-200 bg-white/95 px-3 py-1.5 text-xs font-semibold shadow-md dark:border-slate-700 dark:bg-slate-900">↓ New messages</button></div>
+          <div id="attachmentPreview" class="mb-2 hidden rounded-2xl border border-slate-200 bg-white/90 p-2 dark:border-slate-700 dark:bg-slate-900"></div>
+          <div class="premium-input flex items-end gap-2 rounded-[26px] border border-slate-200/90 bg-white/90 p-2 backdrop-blur-xl dark:border-slate-700/80 dark:bg-slate-900/90">
+            <textarea id="promptInput" rows="1" class="min-h-[44px] flex-1 resize-none bg-transparent px-3 py-2.5 text-[16px] outline-none placeholder:text-slate-400" placeholder="Message Crown AI..."></textarea>
+            <input id="imageInput" type="file" accept="image/*" class="hidden">
+            <button id="attachBtn" class="grid h-11 w-11 shrink-0 place-items-center rounded-full text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Attach image" title="Attach image">＋</button>
+            <button id="micBtn" class="grid h-11 w-11 shrink-0 place-items-center rounded-full text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Voice to text" title="Voice to text">🎙</button>
+            <button id="voiceAgentBtn" class="grid h-11 w-11 shrink-0 place-items-center rounded-full text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Voice agent" title="Voice agent">◉</button>
+            <button id="sendBtn" class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-slate-900 text-white disabled:cursor-not-allowed disabled:opacity-40 dark:bg-white dark:text-slate-950" aria-label="Send"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m6 11 6-6 6 6"/></svg></button>
+            <button id="stopBtn" class="hidden h-11 w-11 shrink-0 place-items-center rounded-full bg-red-600 text-white" aria-label="Stop">■</button>
+          </div>
+          <div class="flex flex-wrap justify-center gap-2 pt-2">
+            <button class="quickPrompt rounded-full border border-slate-200 px-3 py-1 text-[11px] text-slate-500 dark:border-slate-800" data-prefix="Make this shorter and clearer: ">Shorten</button>
+            <button class="quickPrompt rounded-full border border-slate-200 px-3 py-1 text-[11px] text-slate-500 dark:border-slate-800" data-prefix="Improve the writing and make it professional: ">Improve</button>
+            <button class="quickPrompt rounded-full border border-slate-200 px-3 py-1 text-[11px] text-slate-500 dark:border-slate-800" data-prefix="Explain this simply: ">Explain</button>
+            <button class="quickPrompt rounded-full border border-slate-200 px-3 py-1 text-[11px] text-slate-500 dark:border-slate-800" data-prefix="Translate this into English: ">Translate</button>
+          </div>
+          <div class="py-2 text-center text-[11px] text-slate-400">AI can make mistakes. Verify important information.</div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+
+
+
+
+
+  <div id="aiToolModal" class="fixed inset-0 z-[111] hidden items-center justify-center bg-slate-950/60 p-4 backdrop-blur-md">
+    <div class="w-full max-w-xl rounded-[28px] border border-slate-200 bg-white p-5 shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+      <div class="flex items-center justify-between"><div><h2 id="aiToolTitle" class="font-display text-xl font-extrabold">AI Tool</h2><p id="aiToolHint" class="mt-1 text-xs text-slate-400"></p></div><button id="closeAiTool" class="rounded-xl p-2 hover:bg-slate-100 dark:hover:bg-white/5">✕</button></div>
+      <textarea id="aiToolPrompt" rows="6" class="mt-5 w-full resize-y rounded-2xl border border-slate-200 bg-transparent p-4 text-sm outline-none focus:border-violet-400 dark:border-slate-800" placeholder="Describe what you want..."></textarea>
+      <div id="aiToolNotice" class="mt-3 hidden rounded-xl bg-amber-50 p-3 text-xs text-amber-800 dark:bg-amber-500/10 dark:text-amber-200">This tool needs an image-generation/backend API for actual media output. Crown AI will prepare and send the request, but it will not fake a generated file.</div>
+      <div class="mt-4 flex justify-end gap-2"><button id="cancelAiTool" class="rounded-xl border border-slate-200 px-4 py-2 text-sm dark:border-slate-800">Cancel</button><button id="runAiTool" class="rounded-xl bg-slate-950 px-4 py-2 text-sm font-bold text-white dark:bg-white dark:text-slate-950">Use in chat</button></div>
+    </div>
+  </div>
+
+  <div id="toolsModal" class="fixed inset-0 z-[109] hidden items-center justify-center bg-slate-950/60 p-4 backdrop-blur-md">
+    <div class="w-full max-w-2xl rounded-[28px] border border-slate-200 bg-white p-5 shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+      <div class="flex items-center justify-between"><div><h2 class="font-display text-xl font-extrabold">Crown Tools</h2><p class="mt-1 text-xs text-slate-400">Quick access to built-in tools</p></div><button id="closeToolsBtn" class="rounded-xl p-2 hover:bg-slate-100 dark:hover:bg-white/5">✕</button></div>
+      <div class="mb-3 flex gap-2 overflow-x-auto pb-1 text-xs">
+        <button class="toolTab rounded-full bg-slate-900 px-3 py-1.5 font-bold text-white dark:bg-white dark:text-slate-950" data-filter="all">All</button>
+        <button class="toolTab rounded-full border border-slate-200 px-3 py-1.5 dark:border-slate-800" data-filter="image">Image</button>
+        <button class="toolTab rounded-full border border-slate-200 px-3 py-1.5 dark:border-slate-800" data-filter="writing">Writing</button>
+        <button class="toolTab rounded-full border border-slate-200 px-3 py-1.5 dark:border-slate-800" data-filter="utility">Utility</button>
+      </div>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <button id="toolVoiceBtn" data-toolcat="utility" class="aiTool rounded-2xl border border-slate-200 p-4 text-left dark:border-slate-800"><b>🎙 Voice Assistant</b><p class="mt-1 text-xs text-slate-400">Speak, send and hear responses.</p></button>
+        <button id="toolImageBtn" data-toolcat="image" class="aiTool rounded-2xl border border-slate-200 p-4 text-left dark:border-slate-800"><b>◫ Image Studio</b><p class="mt-1 text-xs text-slate-400">Upload an image for edit instructions.</p></button>
+        <button id="toolGenerateImageBtn" data-toolcat="image" class="aiTool rounded-2xl border border-slate-200 p-4 text-left dark:border-slate-800"><b>✦ AI Image Generator</b><p class="mt-1 text-xs text-slate-400">Create a detailed image-generation request.</p></button>
+        <button id="tool3DBtn" data-toolcat="image" class="aiTool rounded-2xl border border-slate-200 p-4 text-left dark:border-slate-800"><b>◈ 3D Generator</b><p class="mt-1 text-xs text-slate-400">Prepare 3D render / image-to-3D prompts.</p></button>
+        <button id="toolEnhanceBtn" data-toolcat="image" class="aiTool rounded-2xl border border-slate-200 p-4 text-left dark:border-slate-800"><b>⌁ Image Enhancer</b><p class="mt-1 text-xs text-slate-400">Upscale, restore and sharpen instructions.</p></button>
+        <button id="toolRemoveBgBtn" data-toolcat="image" class="aiTool rounded-2xl border border-slate-200 p-4 text-left dark:border-slate-800"><b>◎ Background Remover</b><p class="mt-1 text-xs text-slate-400">Prepare transparent-background edits.</p></button>
+        <button id="toolWriterBtn" data-toolcat="writing" class="aiTool rounded-2xl border border-slate-200 p-4 text-left dark:border-slate-800"><b>✎ AI Writer</b><p class="mt-1 text-xs text-slate-400">Emails, posts, CVs and professional writing.</p></button>
+        <button id="toolSummarizeBtn" data-toolcat="writing" class="aiTool rounded-2xl border border-slate-200 p-4 text-left dark:border-slate-800"><b>≡ Summarizer</b><p class="mt-1 text-xs text-slate-400">Summarize pasted content.</p></button>
+        <button id="toolTranslateBtn" data-toolcat="writing" class="aiTool rounded-2xl border border-slate-200 p-4 text-left dark:border-slate-800"><b>文 Translator</b><p class="mt-1 text-xs text-slate-400">Translate while preserving meaning and tone.</p></button>
+        <button id="toolCodeBtn" data-toolcat="writing" class="aiTool rounded-2xl border border-slate-200 p-4 text-left dark:border-slate-800"><b>&lt;/&gt; Code Assistant</b><p class="mt-1 text-xs text-slate-400">Write, explain and debug code.</p></button>
+        <button id="toolExportBtn" data-toolcat="utility" class="aiTool rounded-2xl border border-slate-200 p-4 text-left dark:border-slate-800"><b>⇩ Export Chats</b><p class="mt-1 text-xs text-slate-400">Download your local chat history.</p></button>
+        <button id="toolSearchBtn" data-toolcat="utility" class="aiTool rounded-2xl border border-slate-200 p-4 text-left dark:border-slate-800"><b>⌕ Search</b><p class="mt-1 text-xs text-slate-400">Find previous conversations.</p></button>
+      </div>
+    </div>
+  </div>
+
+  <div id="workspaceModal" class="fixed inset-0 z-[108] hidden items-center justify-center bg-slate-950/60 p-4 backdrop-blur-md">
+    <div class="w-full max-w-2xl rounded-[28px] border border-slate-200 bg-white p-5 shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+      <div class="flex items-center justify-between"><div><h2 id="workspaceTitle" class="font-display text-xl font-extrabold">Library</h2><p id="workspaceSubtitle" class="mt-1 text-xs text-slate-400"></p></div><button id="closeWorkspace" class="rounded-xl p-2 hover:bg-slate-100 dark:hover:bg-white/5">✕</button></div>
+      <div id="workspaceContent" class="mt-5 max-h-[65dvh] overflow-y-auto"></div>
+    </div>
+  </div>
+
+  <div id="chatSearchModal" class="fixed inset-0 z-[107] hidden items-start justify-center bg-slate-950/60 p-4 pt-[10vh] backdrop-blur-md">
+    <div class="w-full max-w-xl rounded-[26px] border border-slate-200 bg-white p-4 shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+      <div class="flex items-center gap-3"><span>⌕</span><input id="chatSearchInput" class="flex-1 bg-transparent py-2 outline-none" placeholder="Search conversations..."><button id="closeChatSearch">✕</button></div>
+      <div id="chatSearchResults" class="mt-3 max-h-[55vh] overflow-y-auto"></div>
+    </div>
+  </div>
+
+  <div id="imageStudio" class="fixed inset-0 z-[106] hidden items-center justify-center bg-slate-950/80 p-4 backdrop-blur-xl">
+    <div class="max-h-[92dvh] w-full max-w-3xl overflow-y-auto rounded-[30px] border border-slate-700 bg-slate-950 p-5 text-white shadow-2xl sm:p-7">
+      <div class="flex items-center justify-between"><div><div class="font-display text-xl font-extrabold">Crown Image Studio</div><div class="text-xs text-slate-400">Prepare image edits and 3D-style requests</div></div><button id="closeImageStudio" class="rounded-xl p-2 hover:bg-white/10">✕</button></div>
+      <div class="mt-5 grid gap-5 md:grid-cols-2">
+        <div class="rounded-2xl border border-slate-800 bg-white/5 p-3"><img id="studioImage" class="mx-auto max-h-[360px] rounded-xl object-contain" alt="Selected image"></div>
+        <div>
+          <label class="text-sm font-semibold">What should Crown AI change?</label>
+          <textarea id="imageEditPrompt" rows="6" class="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-900 p-3 outline-none" placeholder="Example: remove the background, make it cinematic, improve lighting..."></textarea>
+          <label class="mt-4 flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-700 p-3"><input id="threeDMode" type="checkbox"><span><b>3D style</b><small class="block text-slate-400">Add a 3D render instruction to the request</small></span></label>
+          <button id="sendImageRequest" class="mt-4 w-full rounded-2xl bg-gradient-to-r from-cyan-500 to-violet-600 px-4 py-3 font-semibold">Send to Crown AI</button>
+          <p class="mt-3 text-xs leading-5 text-slate-400">This single-file version can preview and package image requests. Actual image generation/editing requires a compatible multimodal image API/backend.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="voicePanel" class="voice-panel">
+    <div class="w-[92vw] max-w-md rounded-[30px] border border-slate-700/60 bg-slate-950/90 p-7 text-center text-white shadow-2xl">
+      <div class="mx-auto mb-5 h-20 w-20 overflow-hidden rounded-full"><img class="h-full w-full object-cover" src="assets/crown-ai-logo.png" alt="Crown AI"></div>
+      <div class="font-display text-2xl font-extrabold">Crown Voice</div>
+      <div id="voiceStatus" class="mt-2 text-sm text-slate-400">Tap Start and speak naturally</div>
+      <div class="voice-wave mx-auto my-7 justify-center"><i></i><i></i><i></i><i></i><i></i></div>
+      <div id="voiceTranscript" class="min-h-16 rounded-2xl bg-white/5 p-4 text-sm leading-6 text-slate-300">Your conversation will appear here.</div>
+      <div class="mt-6 flex justify-center gap-3">
+        <button id="voiceStartBtn" class="rounded-2xl bg-gradient-to-r from-cyan-500 to-violet-600 px-5 py-3 font-semibold">Start conversation</button>
+        <button id="voiceCloseBtn" class="rounded-2xl border border-slate-700 px-5 py-3 font-semibold">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="settingsModal" class="fixed inset-0 z-[80] hidden items-center justify-center bg-slate-950/50 p-4">
+    <div class="max-h-[90dvh] w-full max-w-lg overflow-y-auto rounded-3xl bg-white p-5 shadow-2xl dark:bg-slate-900">
+      <div class="mb-5 flex items-center justify-between">
+        <h2 class="text-xl font-bold">Settings</h2>
+        <button id="closeSettingsBtn" class="rounded-xl p-2 hover:bg-slate-100 dark:hover:bg-slate-800">✕</button>
+      </div>
+      <label class="mb-1 block text-sm font-medium">Crown AI Backend</label>
+      <input id="apiKeyInput" type="text" autocomplete="off" class="mb-2 w-full rounded-xl border border-slate-300 bg-transparent px-3 py-2.5 outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-700" placeholder="https://your-worker.workers.dev" />
+      <p class="mb-4 text-xs text-slate-400">Set this once before publishing. Visitors will not be asked for an API key. Your OpenRouter key stays in the backend secret.</p>
+      <div class="mb-4">
+        <label class="mb-1 block text-sm font-medium">AI Model</label>
+        <select id="modelPreset" class="mb-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none dark:border-slate-700 dark:bg-slate-950">
+          <option value="openai/gpt-4o-mini">Balanced</option>
+          <option value="google/gemini-2.0-flash-001">Fast</option>
+          <option value="anthropic/claude-3.5-sonnet">Advanced</option>
+          <option value="custom">Custom model ID</option>
+        </select>
+        <input id="modelInput" class="w-full rounded-xl border border-slate-200 bg-transparent px-3 py-2 text-sm outline-none dark:border-slate-700" placeholder="Provider/model-id">
+        <p class="mt-2 text-xs leading-5 text-slate-400">This controls the backend model used by Crown AI. The selected provider/model name is not shown in the normal chat interface.</p>
+      </div>
+
+      <label class="mb-1 block text-sm font-medium">Global system prompt</label>
+      <textarea id="systemPromptInput" rows="5" class="mb-5 w-full resize-y rounded-xl border border-slate-300 bg-transparent px-3 py-2.5 outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-700" placeholder="You are a helpful AI assistant."></textarea>
+
+
+      <div class="mb-5 rounded-2xl border border-slate-200 p-4 dark:border-slate-800">
+        <div class="mb-3 flex items-center justify-between"><div><div class="font-semibold">Account</div><div id="accountStatus" class="mt-1 text-xs text-slate-500">Guest session</div></div><span class="status-dot"></span></div>
+        <button id="loginSettingsBtn" class="mr-2 rounded-xl border border-slate-300 px-3 py-2 text-sm dark:border-slate-700">Login</button>
+        <button id="logoutBtn" class="rounded-xl border border-red-300 px-3 py-2 text-sm text-red-600 dark:border-red-900">Logout</button>
+      </div>
+
+      <div class="mb-5 rounded-2xl border border-slate-200 p-4 dark:border-slate-800">
+        <div class="font-semibold">Chat behavior</div>
+        <label class="mt-3 flex items-center justify-between gap-3 text-sm"><span>Auto-scroll new responses</span><input id="autoScrollSetting" type="checkbox" checked></label>
+        <label class="mt-3 flex items-center justify-between gap-3 text-sm"><span>Read responses aloud</span><input id="readAloudSetting" type="checkbox"></label>
+        <label class="mt-3 flex items-center justify-between gap-3 text-sm"><span>Send with Enter</span><input id="enterSendSetting" type="checkbox" checked></label>
+      </div>
+      <div class="mb-5 rounded-2xl border border-slate-200 p-4 dark:border-slate-800">
+        <div class="font-semibold">Chat data</div><div class="mt-1 text-xs text-slate-500">Your chats are stored locally in this browser.</div>
+        <button id="exportChatsBtn" class="mt-3 rounded-xl border border-slate-300 px-3 py-2 text-sm dark:border-slate-700">Export chats</button>
+        <button id="clearChatsBtn" class="mt-3 rounded-xl border border-red-300 px-3 py-2 text-sm text-red-600 dark:border-red-900">Clear chats</button>
+      </div>
+      <button id="saveSettingsBtn" class="w-full rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700">Save settings</button>
+    </div>
+  </div>
+
+  <script>
+  (() => {
+    'use strict';
+
+    const $ = (id) => document.getElementById(id);
+    const els = {
+      loading:$('loading'), sidebar:$('sidebar'), overlay:$('overlay'), menu:$('menuBtn'), closeSidebar:$('closeSidebarBtn'),
+      newChat:$('newChatBtn'), chatList:$('chatList'), chatTitle:$('chatTitle'),
+      messages:$('messages'), inner:$('messageInner'), input:$('promptInput'), send:$('sendBtn'), stop:$('stopBtn'),
+      theme:$('themeBtn'), settings:$('settingsBtn'), modal:$('settingsModal'), closeSettings:$('closeSettingsBtn'),
+      apiKey:$('apiKeyInput'), model:$('modelInput'), system:$('systemPromptInput'), saveSettings:$('saveSettingsBtn')
+    };
+
+    const KEYS = { chats:'uai_chats_v1', active:'uai_active_v1', api:'uai_api_v1', model:'uai_model_v1', theme:'uai_theme_v1', system:'uai_system_v1' };
+    const DEFAULT_MODEL = 'openai/gpt-4o-mini';
+    const DEFAULT_BACKEND=''; // Paste only your public Cloudflare Worker URL here before publishing.
+    let chats = [];
+    let activeId = '';
+    try{
+      chats = safeJSON(localStorage.getItem(KEYS.chats), []);
+      activeId = localStorage.getItem(KEYS.active) || '';
+    }catch(e){ console.warn('Storage unavailable; using temporary session data.',e); }
+    let controller = null;
+
+    function safeJSON(value, fallback) { try { const x=JSON.parse(value); return x ?? fallback; } catch { return fallback; } }
+    function uid() { return (crypto && crypto.randomUUID) ? crypto.randomUUID() : Date.now().toString(36)+Math.random().toString(36).slice(2); }
+    function downloadMessage(text,filename='crown-ai-response.txt'){
+      try{
+        const blob=new Blob([String(text||'')],{type:'text/plain;charset=utf-8'});
+        const url=URL.createObjectURL(blob),a=document.createElement('a');
+        a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+        setTimeout(()=>URL.revokeObjectURL(url),1000);
+      }catch(e){console.warn('Download failed',e);}
+    }
+    async function copyTextSafe(text){
+      try{
+        if(navigator.clipboard && window.isSecureContext){await navigator.clipboard.writeText(String(text||''));return;}
+        const ta=document.createElement('textarea');ta.value=String(text||'');ta.style.position='fixed';ta.style.opacity='0';
+        document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
+      }catch(e){console.warn('Copy failed',e);}
+    }
+    function escapeHTML(s='') { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+    function currentChat() { return chats.find(c => c.id === activeId) || null; }
+    function persist() {
+      try{
+        localStorage.setItem(KEYS.chats, JSON.stringify(chats));
+        localStorage.setItem(KEYS.active, activeId);
+      }catch(e){ console.warn('Could not save chat history',e); }
+    }
+
+    function newChat() {
+      const c = { id:uid(), title:'New chat', messages:[], createdAt:Date.now() };
+      chats.unshift(c); activeId=c.id; autoScroll=true; persist(); renderAll(); closeSidebar();
+      requestAnimationFrame(() => els.input.focus());
+    }
+
+    function ensureChat() {
+      if (!Array.isArray(chats)) chats=[];
+      if (!chats.length || !chats.some(c => c.id===activeId)) newChat();
+    }
+
+    function renderChatList() {
+      els.chatList.innerHTML='';
+      chats.forEach(c => {
+        const row=document.createElement('div');
+        row.className='group mb-1 flex items-center rounded-xl '+(c.id===activeId?'bg-slate-200 dark:bg-slate-800':'hover:bg-slate-200/70 dark:hover:bg-slate-800/70');
+        const open=document.createElement('button');
+        open.className='min-w-0 flex-1 truncate px-3 py-2.5 text-left text-sm';
+        open.textContent=c.title || 'New chat';
+        open.onclick=()=>{activeId=c.id;autoScroll=true;persist();renderAll();closeSidebar();setTimeout(()=>forceScrollBottom(false),0);};
+        const more=document.createElement('button');
+        more.className='px-2 py-2 text-slate-400 hover:text-slate-900 dark:hover:text-white';
+        more.textContent='⋮';
+        more.onclick=(e)=>{e.stopPropagation(); chatActions(c.id);};
+        row.append(open,more); els.chatList.appendChild(row);
+      });
+    }
+
+    function chatActions(id) {
+      const c=chats.find(x=>x.id===id); if(!c) return;
+      const action=prompt('Type "rename" or "delete":','rename'); if(!action) return;
+      if(action.toLowerCase()==='rename'){
+        const name=prompt('Chat name:',c.title); if(name && name.trim()){c.title=name.trim().slice(0,80);persist();renderAll();}
+      } else if(action.toLowerCase()==='delete'){
+        if(confirm('Delete this chat?')){chats=chats.filter(x=>x.id!==id); if(activeId===id) activeId=chats[0]?.id||''; persist();ensureChat();renderAll();}
+      }
+    }
+
+    function renderMessages() {
+      const c=currentChat(); els.inner.innerHTML='';
+      if(!c || !c.messages.length){
+        els.inner.innerHTML=`<div class="flex min-h-[62vh] items-center justify-center py-8">
+          <div class="w-full max-w-2xl text-center">
+            <img class="mx-auto h-24 w-24 rounded-full object-cover shadow-2xl" src="assets/crown-ai-logo.png" alt="Crown AI">
+            <div class="mt-6 text-xs font-bold uppercase tracking-[.24em] text-indigo-500">Crown AI Intelligence</div>
+            <h1 class="font-display mt-2 text-3xl font-extrabold sm:text-[42px]"><span class="crown-gradient-text">Think Beyond Limits</span></h1>
+            <p class="mx-auto mt-3 max-w-lg text-sm leading-6 text-slate-500 dark:text-slate-400">Think, write, build, and explore — all in one clean workspace.</p>
+            <div class="mt-8 grid grid-cols-1 gap-3 text-left sm:grid-cols-2">
+              <button class="suggestion-card rounded-2xl border border-slate-200 bg-white/70 p-4 dark:border-slate-800 dark:bg-slate-900/60" data-suggest="Help me brainstorm a creative business idea"><b class="text-sm">✦ Brainstorm ideas</b><div class="mt-1 text-xs text-slate-500">Turn a rough thought into a clear concept</div></button>
+              <button class="suggestion-card rounded-2xl border border-slate-200 bg-white/70 p-4 dark:border-slate-800 dark:bg-slate-900/60" data-suggest="Write clean code for a modern web feature"><b class="text-sm">⌘ Build something</b><div class="mt-1 text-xs text-slate-500">Plan, code and improve your project</div></button>
+              <button class="suggestion-card rounded-2xl border border-slate-200 bg-white/70 p-4 dark:border-slate-800 dark:bg-slate-900/60" data-suggest="Explain a difficult topic in simple language"><b class="text-sm">◎ Learn faster</b><div class="mt-1 text-xs text-slate-500">Make complex topics easier to understand</div></button>
+              <button class="suggestion-card rounded-2xl border border-slate-200 bg-white/70 p-4 dark:border-slate-800 dark:bg-slate-900/60" data-suggest="Help me write something professional and polished"><b class="text-sm">✎ Write & refine</b><div class="mt-1 text-xs text-slate-500">Draft, rewrite and polish your words</div></button>
+            </div>
+          </div>
+        </div>`;
+        els.inner.querySelectorAll('[data-suggest]').forEach(b=>b.onclick=()=>{els.input.value=b.dataset.suggest||'';autoGrow();els.input.focus();});
+        return;
+      }
+      c.messages.forEach((m,i)=>els.inner.appendChild(messageNode(m,i)));
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{ if(autoScroll) forceScrollBottom(false); }));
+    }
+
+    function messageNode(m,index) {
+      const wrap=document.createElement('div');
+      wrap.className='mb-5 flex '+(m.role==='user'?'justify-end':'justify-start');
+      const box=document.createElement('div');
+      if(m.role==='user'){
+        box.className='max-w-[85%] rounded-3xl rounded-br-lg bg-slate-100 px-4 py-3 text-sm leading-6 dark:bg-slate-800';
+        const txt=document.createElement('div'); txt.textContent=m.content||''; box.appendChild(txt);
+        const acts=document.createElement('div'); acts.className='mt-2 flex justify-end gap-2 text-[11px] text-slate-400';
+        const copy=document.createElement('button');copy.textContent='Copy';copy.onclick=()=>copyTextSafe(m.content||'');
+        const edit=document.createElement('button');edit.textContent='Edit';edit.onclick=()=>{els.input.value=m.content||'';autoGrow();els.input.focus();};
+        acts.append(copy,edit);box.appendChild(acts);
+      } else {
+        box.className='flex w-full max-w-full gap-3';
+        const content=document.createElement('div'); content.className='prose-ai min-w-0 flex-1 text-sm leading-7 text-slate-800 dark:text-slate-200';
+        content.innerHTML=m.content?renderMarkdown(m.content):'<div class="flex items-center gap-3 text-xs text-slate-400"><img class="processing-logo" src="assets/crown-ai-logo.png" alt=""><span>Crown AI is thinking…</span></div>'; content.dataset.messageIndex=index;
+        const holder=document.createElement('div');holder.className='min-w-0 flex-1';holder.appendChild(content);
+        if(m.content){const acts=document.createElement('div');acts.className='mt-2 flex gap-3 text-[11px] text-slate-400';const cp=document.createElement('button');cp.textContent='Copy';cp.onclick=()=>copyTextSafe(m.content||'');
+        const dl=document.createElement('button');dl.textContent='Download';dl.onclick=()=>downloadMessage(m.content||'', 'crown-ai-response.txt');
+        acts.append(cp,dl);holder.appendChild(acts);}
+        box.append(holder);
+      }
+      wrap.appendChild(box); return wrap;
+    }
+
+    function renderMarkdown(text) {
+      try {
+        if(window.marked && typeof window.marked.parse==='function'){
+          const rendered=window.marked.parse(text,{breaks:true,gfm:true});
+          return window.DOMPurify ? window.DOMPurify.sanitize(rendered,{USE_PROFILES:{html:true}}) : rendered;
+        }
+      } catch(e) { console.warn('Markdown render failed',e); }
+      return '<div class="whitespace-pre-wrap">'+escapeHTML(text)+'</div>';
+    }
+
+    function renderHeader() {
+      const c=currentChat(); els.chatTitle.textContent=c?.title || 'New chat';
+    }
+    function renderAll(){renderChatList();renderHeader();renderMessages();refreshLibraryCount();}
+    function scrollBottom(){ els.messages.scrollTop=els.messages.scrollHeight; }
+
+    function openSidebar(){els.sidebar.classList.add('open');els.overlay.classList.add('open');}
+    function closeSidebar(){els.sidebar.classList.remove('open');els.overlay.classList.remove('open');}
+
+    function setBusy(b){
+      els.send.classList.toggle('hidden',b); els.stop.classList.toggle('hidden',!b);
+      els.stop.classList.toggle('grid',b); els.input.disabled=b;
+    }
+
+    function autoGrow(){
+      els.input.style.height='auto';
+      els.input.style.height=Math.min(els.input.scrollHeight,180)+'px';
+      if(autoScroll) requestAnimationFrame(()=>forceScrollBottom(false));
+    }
+
+    function applyTheme(theme){
+      const dark=theme==='dark'; document.documentElement.classList.toggle('dark',dark);
+      els.theme.textContent=dark?'☀️':'🌙';
+      document.querySelector('meta[name="theme-color"]').setAttribute('content',dark?'#020617':'#ffffff');
+    }
+
+    function openSettings(){
+      els.apiKey.value=localStorage.getItem(KEYS.api)||DEFAULT_BACKEND;
+      els.model.value=localStorage.getItem(KEYS.model)||DEFAULT_MODEL;
+      els.system.value=localStorage.getItem(KEYS.system)||'';
+      els.modal.classList.remove('hidden'); els.modal.classList.add('flex');
+    }
+    function closeSettings(){els.modal.classList.add('hidden');els.modal.classList.remove('flex');}
+
+    function creatorIdentityReply(text){
+      const q=String(text||'').toLowerCase().replace(/[^\p{L}\p{N}\s]/gu,' ').replace(/\s+/g,' ').trim();
+      const patterns=[
+        /\bwho (made|created|built|developed) (you|crown ai)\b/,
+        /\bwho is (your|crown ai s) (creator|developer|founder)\b/,
+        /\b(your|crown ai) (creator|developer|founder) (who|name)\b/,
+        /\b(tumhe|tum ko|aap ko|crown ai ko) (kisne|kis ne) (banaya|bnaya|create|develop)\b/,
+        /\b(tumhara|aap ka|crown ai ka) (creator|developer|founder) (kaun|kon|koun)/
+      ];
+      if(!patterns.some(r=>r.test(q))) return '';
+      const urdu=/\b(kisne|kis ne|banaya|bnaya|tumhara|tumhe|kaun|kon|koun)\b/.test(q);
+      return urdu
+        ? 'Crown AI ko Hashir Salamat ne create kiya hai. Woh Crown AI platform ke creator hain. Crown AI ke peeche use hone wale underlying AI models aur services apne respective providers ki technology hain.'
+        : 'Crown AI was created by Hashir Salamat, the creator of the Crown AI platform. The underlying AI models and services that power Crown AI are technologies provided by their respective providers.';
+    }
+
+    async function sendMessage(){
+      const text=els.input.value.trim(); if(!text || controller) return;
+      const creatorReply=creatorIdentityReply(text);
+      if(creatorReply){
+        const c=currentChat(); if(!c) return;
+        c.messages.push({role:'user',content:text});
+        c.messages.push({role:'assistant',content:creatorReply});
+        if(c.title==='New chat') c.title=text.slice(0,46);
+        els.input.value=''; autoGrow(); autoScroll=true; persist(); renderAll();
+        requestAnimationFrame(()=>forceScrollBottom(false));
+        return;
+      }
+      const backend=(localStorage.getItem(KEYS.api)||DEFAULT_BACKEND).trim().replace(/\/$/,'');
+      const model=localStorage.getItem(KEYS.model)||DEFAULT_MODEL;
+      if(!backend){openSettings();alert('Add your Crown AI backend URL once before publishing.');return;}
+
+      let c=currentChat(); if(!c){newChat();c=currentChat();}
+      c.messages.push({role:'user',content:text});
+      if(c.title==='New chat') c.title=text.replace(/\s+/g,' ').slice(0,45)+(text.length>45?'…':'');
+      c.messages.push({role:'assistant',content:''});
+      const aiIndex=c.messages.length-1;
+      els.input.value=''; autoGrow(); autoScroll=true; persist(); renderAll(); setBusy(true);
+      requestAnimationFrame(()=>{forceScrollBottom(false);setTimeout(()=>forceScrollBottom(false),40);});
+
+      controller=new AbortController();
+      try{
+        const system=(localStorage.getItem(KEYS.system)||'').trim();
+        const payloadMessages=[];
+        if(system) payloadMessages.push({role:'system',content:system});
+        c.messages.slice(0,-1).forEach(m=>payloadMessages.push({role:m.role,content:m.content}));
+
+        const res=await fetch(backend+'/api/chat',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({model, messages:payloadMessages, stream:true}),
+          signal:controller.signal
+        });
+        if(!res.ok){
+          let detail=''; try{detail=await res.text();}catch{}
+          throw new Error('API error '+res.status+(detail?': '+detail.slice(0,500):''));
+        }
+        if(!res.body) throw new Error('Streaming is not supported by this browser/response.');
+
+        const reader=res.body.getReader(), decoder=new TextDecoder();
+        let buffer='';
+        while(true){
+          const {value,done}=await reader.read(); if(done) break;
+          buffer+=decoder.decode(value,{stream:true});
+          const lines=buffer.split('\n'); buffer=lines.pop()||'';
+          for(const raw of lines){
+            const line=raw.trim(); if(!line.startsWith('data:')) continue;
+            const data=line.slice(5).trim(); if(!data || data==='[DONE]') continue;
+            try{
+              const obj=JSON.parse(data);
+              const token=obj?.choices?.[0]?.delta?.content;
+              if(typeof token==='string' && token){
+                c.messages[aiIndex].content+=token;
+                updateStreamingMessage(aiIndex,c.messages[aiIndex].content);
+              }
+              const err=obj?.error?.message; if(err) throw new Error(err);
+            }catch(err){
+              if(err instanceof SyntaxError) console.warn('Skipped malformed stream chunk');
+              else throw err;
+            }
+          }
+        }
+        if(!c.messages[aiIndex].content) c.messages[aiIndex].content='No text response was returned.';
+        if(prefs().readAloud && !voiceMode) speakText(c.messages[aiIndex].content);
+      }catch(err){
+        if(err?.name==='AbortError'){
+          if(!c.messages[aiIndex].content) c.messages[aiIndex].content='Response stopped.';
+        }else{
+          c.messages[aiIndex].content='**Error:** '+String(err?.message||err);
+        }
+      }finally{
+        controller=null; persist(); renderAll(); setBusy(false); els.input.disabled=false; els.input.focus();
+        autoScroll=true; requestAnimationFrame(()=>{forceScrollBottom(false);setTimeout(()=>forceScrollBottom(false),40);});
+      }
+    }
+
+    function updateStreamingMessage(index,text){
+      const node=els.inner.querySelector('[data-message-index="'+index+'"]');
+      if(node) node.innerHTML=renderMarkdown(text);
+      else renderMessages();
+      autoScroll=true;
+      forceScrollBottom(false);
+    }
+
+    els.menu.onclick=openSidebar; els.closeSidebar.onclick=closeSidebar; els.overlay.onclick=closeSidebar;
+    els.newChat.onclick=newChat; els.settings.onclick=openSettings; els.closeSettings.onclick=closeSettings;
+    els.modal.addEventListener('click',e=>{if(e.target===els.modal)closeSettings();});
+    els.saveSettings.onclick=()=>{
+      localStorage.setItem(KEYS.api,els.apiKey.value.trim());
+      localStorage.setItem(KEYS.model,els.model.value.trim()||DEFAULT_MODEL);
+      localStorage.setItem(KEYS.system,els.system.value.trim());
+      closeSettings(); renderHeader();
+    };
+    els.theme.onclick=()=>{
+      const next=document.documentElement.classList.contains('dark')?'light':'dark';
+      localStorage.setItem(KEYS.theme,next);applyTheme(next);
+    };
+    els.send.onclick=sendMessage;
+    els.stop.onclick=()=>controller?.abort();
+    els.input.addEventListener('input',autoGrow);
+    els.input.addEventListener('keydown',e=>{
+      if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing&&prefs().enterSend!==false){e.preventDefault();sendMessage();}
+    });
+    window.addEventListener('resize',()=>{if(innerWidth>=768)closeSidebar();});
+
+
+
+
+
+
+    const workspaceModal=document.getElementById('workspaceModal'), workspaceTitle=document.getElementById('workspaceTitle');
+    const workspaceSubtitle=document.getElementById('workspaceSubtitle'), workspaceContent=document.getElementById('workspaceContent');
+    function openWorkspace(title,subtitle,html){
+      workspaceTitle.textContent=title;workspaceSubtitle.textContent=subtitle||'';workspaceContent.innerHTML=html;
+      workspaceModal.classList.remove('hidden');workspaceModal.classList.add('flex');
+      setTimeout(()=>{const p=document.getElementById('projectNewChat');if(p)p.onclick=()=>{closeWorkspace();newChat();};},0);
+    }
+    function closeWorkspace(){workspaceModal.classList.add('hidden');workspaceModal.classList.remove('flex');}
+    document.getElementById('closeWorkspace').onclick=closeWorkspace;
+    workspaceModal.onclick=e=>{if(e.target===workspaceModal)closeWorkspace();};
+    function refreshLibraryCount(){const el=document.getElementById('libraryCount');if(el)el.textContent=String(chats.filter(c=>(c.messages||[]).length).length);}
+    document.getElementById('libraryBtn').onclick=()=>{
+      const items=chats.filter(c=>(c.messages||[]).length).map(c=>'<div class="mb-2 rounded-2xl border border-slate-200 p-4 dark:border-slate-800"><div class="font-semibold">'+escapeHTML(c.title||'New chat')+'</div><div class="mt-1 text-xs text-slate-400">'+(c.messages?.length||0)+' messages</div></div>').join('');
+      openWorkspace('Library','Your local Crown AI conversations',items||'<div class="py-10 text-center text-sm text-slate-400">Your library is empty. Start a conversation and it will appear here.</div>');
+    };
+    document.getElementById('projectsBtn').onclick=()=>openWorkspace('Projects','Organize work into focused spaces','<div class="rounded-2xl border border-dashed border-slate-300 p-8 text-center dark:border-slate-700"><div class="text-3xl">◇</div><div class="mt-3 font-semibold">Projects workspace</div><div class="mt-1 text-sm text-slate-400">Project folders and cloud sync need a backend. The interface is ready for that upgrade.</div><button id="projectNewChat" class="mt-4 rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white dark:bg-white dark:text-slate-950">Start project chat</button></div>');
+    document.getElementById('exploreBtn').onclick=()=>openWorkspace('Explore','Quick ways to use Crown AI','<div class="grid gap-3 sm:grid-cols-2"><div class="rounded-2xl border border-slate-200 p-4 dark:border-slate-800"><b>Write & improve</b><p class="mt-1 text-xs text-slate-400">Draft, rewrite and polish content.</p></div><div class="rounded-2xl border border-slate-200 p-4 dark:border-slate-800"><b>Image Studio</b><p class="mt-1 text-xs text-slate-400">Prepare image edit and 3D requests.</p></div><div class="rounded-2xl border border-slate-200 p-4 dark:border-slate-800"><b>Voice</b><p class="mt-1 text-xs text-slate-400">Talk to Crown AI in supported browsers.</p></div><div class="rounded-2xl border border-slate-200 p-4 dark:border-slate-800"><b>Code & explain</b><p class="mt-1 text-xs text-slate-400">Ask questions and work through code.</p></div></div>');
+    document.getElementById('moreBtn').onclick=()=>document.getElementById('moreMenu').classList.toggle('hidden');
+    document.getElementById('savedPromptsBtn').onclick=()=>openWorkspace('Saved prompts','Reusable prompt ideas','<div class="py-8 text-center text-sm text-slate-400">Saved prompts can be connected to persistent storage in a backend version.</div>');
+    document.getElementById('dataControlsBtn').onclick=()=>openWorkspace('Data controls','Manage local Crown AI data','<div class="rounded-2xl bg-slate-100 p-4 text-sm dark:bg-white/5">Chats and preferences in this single-file version are stored in your browser. Use Settings to export or clear them.</div>');
+    document.getElementById('helpBtn').onclick=()=>openWorkspace('Help & shortcuts','Useful Crown AI shortcuts','<div class="space-y-3 text-sm"><div class="flex justify-between"><span>Search chats</span><kbd>Ctrl / Cmd + K</kbd></div><div class="flex justify-between"><span>New chat</span><kbd>Ctrl / Cmd + Shift + O</kbd></div><div class="flex justify-between"><span>Send</span><kbd>Enter</kbd></div><div class="flex justify-between"><span>New line</span><kbd>Shift + Enter</kbd></div></div>');
+
+
+    const modelPreset=document.getElementById('modelPreset');
+    function syncModelPreset(){
+      if(!modelPreset || !els.modelInput) return;
+      const v=els.modelInput.value.trim();
+      const known=[...modelPreset.options].map(o=>o.value).filter(x=>x!=='custom');
+      modelPreset.value=known.includes(v)?v:'custom';
+    }
+    modelPreset?.addEventListener('change',()=>{
+      if(modelPreset.value!=='custom'){
+        els.modelInput.value=modelPreset.value;
+      }else{
+        els.modelInput.focus();
+        els.modelInput.select();
+      }
+    });
+    els.modelInput?.addEventListener('input',syncModelPreset);
+    const PREF_KEY='crown_preferences_v1';
+    function prefs(){return safeJSON(localStorage.getItem(PREF_KEY),{autoScroll:true,readAloud:false,enterSend:true});}
+    function savePrefs(p){localStorage.setItem(PREF_KEY,JSON.stringify(p));}
+    const autoScrollSetting=document.getElementById('autoScrollSetting');
+    const readAloudSetting=document.getElementById('readAloudSetting');
+    const enterSendSetting=document.getElementById('enterSendSetting');
+    const initialPrefs=prefs();
+    autoScrollSetting.checked=initialPrefs.autoScroll!==false;
+    readAloudSetting.checked=!!initialPrefs.readAloud;
+    enterSendSetting.checked=initialPrefs.enterSend!==false;
+    [autoScrollSetting,readAloudSetting,enterSendSetting].forEach(x=>x.onchange=()=>savePrefs({autoScroll:autoScrollSetting.checked,readAloud:readAloudSetting.checked,enterSend:enterSendSetting.checked}));
+
+    document.querySelectorAll('.quickPrompt').forEach(btn=>btn.onclick=()=>{
+      const existing=els.input.value.trim();
+      els.input.value=(btn.dataset.prefix||'')+existing;
+      autoGrow();els.input.focus();
+    });
+
+    const chatSearchModal=document.getElementById('chatSearchModal'), chatSearchInput=document.getElementById('chatSearchInput'), chatSearchResults=document.getElementById('chatSearchResults');
+    function openChatSearch(){chatSearchModal.classList.remove('hidden');chatSearchModal.classList.add('flex');chatSearchInput.value='';renderChatSearch('');setTimeout(()=>chatSearchInput.focus(),50);}
+    function closeChatSearch(){chatSearchModal.classList.add('hidden');chatSearchModal.classList.remove('flex');}
+    function renderChatSearch(q){
+      const term=q.toLowerCase().trim();
+      const found=chats.filter(c=>!term||(c.title||'').toLowerCase().includes(term)||(c.messages||[]).some(m=>(m.content||'').toLowerCase().includes(term)));
+      chatSearchResults.innerHTML='';
+      if(!found.length){chatSearchResults.innerHTML='<div class="p-4 text-center text-sm text-slate-400">No conversations found</div>';return;}
+      found.slice(0,30).forEach(c=>{
+        const b=document.createElement('button');b.className='mb-1 block w-full rounded-xl p-3 text-left hover:bg-slate-100 dark:hover:bg-slate-800';
+        b.innerHTML='<div class="truncate text-sm font-semibold">'+escapeHTML(c.title||'New chat')+'</div><div class="mt-1 truncate text-xs text-slate-400">'+escapeHTML((c.messages?.at(-1)?.content||'').slice(0,100))+'</div>';
+        b.onclick=()=>{activeId=c.id;persist();renderAll();closeChatSearch();};chatSearchResults.appendChild(b);
+      });
+    }
+    document.getElementById('searchChatsBtn').onclick=openChatSearch;
+    document.getElementById('closeChatSearch').onclick=closeChatSearch;
+    chatSearchInput.oninput=()=>renderChatSearch(chatSearchInput.value);
+    chatSearchModal.onclick=e=>{if(e.target===chatSearchModal)closeChatSearch();};
+
+    document.addEventListener('keydown',e=>{
+      if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openChatSearch();}
+      if((e.ctrlKey||e.metaKey)&&e.shiftKey&&e.key.toLowerCase()==='o'){e.preventDefault();newChat();}
+      if(e.key==='Escape'){closeChatSearch();}
+    });
+
+    let pendingImage=null;
+    let autoScroll=true;
+    let programmaticScroll=false;
+    let lastScrollTop=0;
+    const attachBtn=document.getElementById('attachBtn'), imageInput=document.getElementById('imageInput');
+    const attachmentPreview=document.getElementById('attachmentPreview'), imageStudio=document.getElementById('imageStudio');
+    const studioImage=document.getElementById('studioImage'), jumpLatestBtn=document.getElementById('jumpLatestBtn');
+
+    function distanceFromBottom(){
+      return Math.max(0, els.messages.scrollHeight - els.messages.scrollTop - els.messages.clientHeight);
+    }
+    function forceScrollBottom(smooth=false){
+      if(prefs().autoScroll===false) return;
+      autoScroll=true;
+      programmaticScroll=true;
+      jumpLatestBtn.classList.add('hidden');
+      const go=()=>{
+        const target=els.messages.scrollHeight;
+        if(smooth && els.messages.scrollTo){
+          try{els.messages.scrollTo({top:target,behavior:'smooth'});}
+          catch(_){els.messages.scrollTop=target;}
+        }else{
+          els.messages.scrollTop=target;
+        }
+      };
+      go();
+      requestAnimationFrame(()=>{
+        go();
+        setTimeout(()=>{
+          go();
+          programmaticScroll=false;
+          lastScrollTop=els.messages.scrollTop;
+        },30);
+      });
+    }
+    function updateScrollMode(){
+      const current=els.messages.scrollTop;
+      const movingUp=current < lastScrollTop-2;
+      const nearBottom=distanceFromBottom()<160;
+      if(!programmaticScroll && prefs().autoScroll!==false){
+        if(movingUp && !nearBottom) autoScroll=false;
+        else if(nearBottom) autoScroll=true;
+      }
+      lastScrollTop=current;
+      jumpLatestBtn.classList.toggle('hidden', autoScroll || distanceFromBottom()<80);
+    }
+    els.messages.addEventListener('scroll',updateScrollMode,{passive:true});
+    jumpLatestBtn.onclick=()=>forceScrollBottom(true);
+    scrollBottom=function(){
+      if(autoScroll && prefs().autoScroll!==false) forceScrollBottom(false);
+    };
+
+    attachBtn.onclick=()=>imageInput.click();
+    imageInput.onchange=()=>{
+      const f=imageInput.files?.[0]; if(!f) return;
+      if(!f.type.startsWith('image/')){alert('Please choose an image file.');return;}
+      if(f.size>8*1024*1024){alert('Please choose an image under 8 MB.');return;}
+      const reader=new FileReader();
+      reader.onload=()=>{
+        pendingImage={name:f.name,type:f.type,data:String(reader.result||'')};
+        attachmentPreview.innerHTML='<div class="flex items-center gap-3"><img class="h-14 w-14 rounded-xl object-cover" src="'+pendingImage.data+'"><div class="min-w-0 flex-1"><div class="truncate text-sm font-semibold">'+escapeHTML(f.name)+'</div><button id="openStudioBtn" class="mt-1 text-xs text-indigo-500">Edit / 3D options</button></div><button id="removeImageBtn" class="rounded-lg px-2 py-1 text-slate-400">✕</button></div>';
+        attachmentPreview.classList.remove('hidden');
+        document.getElementById('openStudioBtn').onclick=()=>{studioImage.src=pendingImage.data;imageStudio.classList.remove('hidden');imageStudio.classList.add('flex');};
+        document.getElementById('removeImageBtn').onclick=()=>{pendingImage=null;imageInput.value='';attachmentPreview.classList.add('hidden');};
+      }; reader.readAsDataURL(f);
+    };
+    document.getElementById('closeImageStudio').onclick=()=>{imageStudio.classList.add('hidden');imageStudio.classList.remove('flex');};
+    document.getElementById('sendImageRequest').onclick=()=>{
+      const edit=document.getElementById('imageEditPrompt').value.trim();
+      const is3d=document.getElementById('threeDMode').checked;
+      let request=edit||'Analyze this image and suggest improvements.';
+      if(is3d) request+=' Render or transform it in a polished 3D style.';
+      request+=' [Image attached: '+(pendingImage?.name||'image')+']';
+      els.input.value=request; autoGrow(); imageStudio.classList.add('hidden');imageStudio.classList.remove('flex');els.input.focus();
+    };
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition=null, voiceMode=false, listening=false;
+    const micBtn=document.getElementById('micBtn'), voiceAgentBtn=document.getElementById('voiceAgentBtn');
+    const voicePanel=document.getElementById('voicePanel'), voiceStatus=document.getElementById('voiceStatus');
+    const voiceTranscript=document.getElementById('voiceTranscript');
+
+    async function ensureMicPermission(){
+      if(!navigator.mediaDevices?.getUserMedia) return true;
+      try{
+        const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+        stream.getTracks().forEach(t=>t.stop());
+        return true;
+      }catch(e){
+        voiceStatus.textContent='Microphone permission is blocked. Allow microphone access in your browser/site settings.';
+        return false;
+      }
+    }
+    function makeRecognition(onFinal){
+      if(!SpeechRecognition) return null;
+      const r=new SpeechRecognition();
+      r.lang=navigator.language||'en-US'; r.interimResults=true; r.continuous=false; r.maxAlternatives=1;
+      let accumulated='';
+      r.onstart=()=>{listening=true;voiceStatus.textContent='Listening…';micBtn.classList.add('voice-live');};
+      r.onresult=e=>{
+        let interim='';
+        for(let i=e.resultIndex;i<e.results.length;i++){
+          const t=e.results[i][0]?.transcript||'';
+          if(e.results[i].isFinal) accumulated+=t+' '; else interim+=t;
+        }
+        const shown=(accumulated+interim).trim();
+        if(voiceMode) voiceTranscript.textContent=shown||'Listening…';
+        else {els.input.value=shown;autoGrow();}
+        if(accumulated.trim()) onFinal(accumulated.trim());
+      };
+      r.onerror=e=>{
+        listening=false;micBtn.classList.remove('voice-live');
+        const msg=e.error==='not-allowed'?'Microphone access denied. Allow it in site settings.':
+                  e.error==='no-speech'?'I did not hear speech. Try again.':'Voice error: '+(e.error||'unknown');
+        voiceStatus.textContent=msg;
+      };
+      r.onend=()=>{listening=false;micBtn.classList.remove('voice-live');if(voiceMode && voiceStatus.textContent==='Listening…')voiceStatus.textContent='Ready';};
+      return r;
+    }
+    async function startDictation(){
+      if(!SpeechRecognition){alert('Speech recognition is unavailable in this browser. Use a supported Chromium browser and HTTPS.');return;}
+      if(listening){recognition?.stop();return;}
+      if(!(await ensureMicPermission())) return;
+      recognition=makeRecognition(()=>{}); recognition.start();
+    }
+    function speakText(text){
+      if(!('speechSynthesis' in window)||!text) return;
+      window.speechSynthesis.cancel();
+      const clean=String(text).replace(/[`*_#>\[\]()]/g,' ').replace(/\s+/g,' ').trim();
+      const u=new SpeechSynthesisUtterance(clean);u.lang=navigator.language||'en-US';u.rate=1;
+      u.onend=()=>{if(voiceMode)voiceStatus.textContent='Ready — tap Start to speak again';};
+      u.onerror=()=>{if(voiceMode)voiceStatus.textContent='Could not play voice output.';};
+      window.speechSynthesis.speak(u);
+    }
+    async function voiceAsk(text){
+      els.input.value=text;autoGrow();voiceStatus.textContent='Crown AI is thinking…';
+      await sendMessage();
+      const c=currentChat(),answer=c?.messages?.[c.messages.length-1]?.content||'';
+      voiceTranscript.textContent=answer||'No response.';
+      if(answer){voiceStatus.textContent='Speaking…';speakText(answer);}
+    }
+    micBtn.onclick=startDictation;
+    voiceAgentBtn.onclick=()=>{voiceMode=true;voicePanel.classList.add('open');voiceStatus.textContent=SpeechRecognition?'Tap Start and speak naturally':'Voice recognition is unavailable in this browser.';};
+    document.getElementById('voiceCloseBtn').onclick=()=>{voiceMode=false;recognition?.stop();window.speechSynthesis?.cancel();voicePanel.classList.remove('open');};
+    document.getElementById('voiceStartBtn').onclick=async()=>{
+      if(!SpeechRecognition){voiceStatus.textContent='Voice recognition needs a supported Chromium browser over HTTPS.';return;}
+      if(!(await ensureMicPermission())) return;
+      recognition=makeRecognition(t=>{try{recognition.stop();}catch(_){};voiceAsk(t);});
+      voiceTranscript.textContent='Speak now…';recognition.start();
+    };
+
+    const crownSplash=document.getElementById('crownSplash');
+    const authModal=document.getElementById('authModal');
+    const accountBtn=document.getElementById('accountBtn');
+    const authNotice=document.getElementById('authNotice');
+    const accountStatus=document.getElementById('accountStatus');
+    const AUTH_KEY='crown_auth_v1';
+
+    function authState(){ return safeJSON(localStorage.getItem(AUTH_KEY), {mode:'guest'}); }
+    function updateAccountUI(){
+      const a=authState(), label=a.email || (a.mode==='guest'?'Guest':'Signed in');
+      if(accountBtn) accountBtn.textContent=a.mode==='guest'?'Login':label;
+      if(accountStatus) accountStatus.textContent=a.mode==='guest'?'Guest session — chats stay on this device':label;
+    }
+    function showAuth(){ authModal.classList.remove('hidden');authModal.classList.add('flex'); }
+    function hideAuth(){ authModal.classList.add('hidden');authModal.classList.remove('flex'); }
+    function providerNotice(name){
+      authNotice.textContent=name+' sign-in UI is ready, but real '+name+' OAuth needs provider credentials/backend configuration. No fake login was created.';
+      authNotice.classList.remove('hidden');
+    }
+    accountBtn.onclick=showAuth;
+
+
+    const aiToolModal=document.getElementById('aiToolModal'),aiToolTitle=document.getElementById('aiToolTitle'),aiToolHint=document.getElementById('aiToolHint'),aiToolPrompt=document.getElementById('aiToolPrompt'),aiToolNotice=document.getElementById('aiToolNotice');
+    let activeToolPrefix='',activeToolMedia=false;
+    function launchAiTool(title,hint,prefix,media=false){
+      closeTools();activeToolPrefix=prefix;activeToolMedia=media;aiToolTitle.textContent=title;aiToolHint.textContent=hint;aiToolPrompt.value='';aiToolNotice.classList.toggle('hidden',!media);aiToolModal.classList.remove('hidden');aiToolModal.classList.add('flex');setTimeout(()=>aiToolPrompt.focus(),50);
+    }
+    function closeAiTool(){aiToolModal.classList.add('hidden');aiToolModal.classList.remove('flex');}
+    document.getElementById('closeAiTool').onclick=closeAiTool;document.getElementById('cancelAiTool').onclick=closeAiTool;aiToolModal.onclick=e=>{if(e.target===aiToolModal)closeAiTool();};
+    document.getElementById('runAiTool').onclick=()=>{const q=aiToolPrompt.value.trim();if(!q)return;els.input.value=activeToolPrefix+q;autoGrow();closeAiTool();els.input.focus();};
+    document.querySelectorAll('.toolTab').forEach(tab=>tab.onclick=()=>{
+      const f=tab.dataset.filter;document.querySelectorAll('.toolTab').forEach(x=>{x.classList.remove('bg-slate-900','text-white','dark:bg-white','dark:text-slate-950');});tab.classList.add('bg-slate-900','text-white','dark:bg-white','dark:text-slate-950');
+      document.querySelectorAll('.aiTool').forEach(x=>x.classList.toggle('hidden',f!=='all'&&x.dataset.toolcat!==f));
+    });
+    const toolsModal=document.getElementById('toolsModal');
+    function openTools(){toolsModal.classList.remove('hidden');toolsModal.classList.add('flex');}
+    function closeTools(){toolsModal.classList.add('hidden');toolsModal.classList.remove('flex');}
+    document.getElementById('toolsBtn').onclick=openTools;
+    document.getElementById('closeToolsBtn').onclick=closeTools;
+    toolsModal.onclick=e=>{if(e.target===toolsModal)closeTools();};
+    document.getElementById('toolVoiceBtn').onclick=()=>{closeTools();voiceMode=true;voicePanel.classList.add('open');};
+    document.getElementById('toolImageBtn').onclick=()=>{closeTools();imageInput.click();};
+    document.getElementById('toolSearchBtn').onclick=()=>{closeTools();openChatSearch();};
+    document.getElementById('toolExportBtn').onclick=()=>{closeTools();document.getElementById('exportChatsBtn').click();};
+
+    document.getElementById('toolGenerateImageBtn').onclick=()=>launchAiTool('AI Image Generator','Describe the image you want.','Create a detailed image-generation prompt for: ',true);
+    document.getElementById('tool3DBtn').onclick=()=>launchAiTool('3D Generator','Describe the object, logo or scene.','Create a premium realistic 3D render prompt for: ',true);
+    document.getElementById('toolEnhanceBtn').onclick=()=>launchAiTool('Image Enhancer','Describe what should be restored or improved.','Create precise image enhancement instructions for: ',true);
+    document.getElementById('toolRemoveBgBtn').onclick=()=>launchAiTool('Background Remover','Describe the subject to preserve.','Create image-edit instructions to remove the background and preserve: ',true);
+    document.getElementById('toolWriterBtn').onclick=()=>launchAiTool('AI Writer','Tell Crown AI what you need written.','Write this professionally: ');
+    document.getElementById('toolSummarizeBtn').onclick=()=>launchAiTool('Summarizer','Paste the content to summarize.','Summarize this clearly with key points: ');
+    document.getElementById('toolTranslateBtn').onclick=()=>launchAiTool('Translator','Paste text and mention the target language.','Translate accurately while preserving tone: ');
+    document.getElementById('toolCodeBtn').onclick=()=>launchAiTool('Code Assistant','Describe the code task or paste code.','Act as a senior software engineer. Help with this task: ');
+
+
+    const sidebarAccountBtn=document.getElementById('sidebarAccountBtn'); if(sidebarAccountBtn) sidebarAccountBtn.onclick=showAuth;
+    document.getElementById('loginSettingsBtn').onclick=showAuth;
+    document.getElementById('googleLogin').onclick=()=>providerNotice('Google');
+    document.getElementById('appleLogin').onclick=()=>providerNotice('Apple');
+    document.getElementById('guestLogin').onclick=()=>{localStorage.setItem(AUTH_KEY,JSON.stringify({mode:'guest'}));hideAuth();updateAccountUI();};
+    document.getElementById('emailLogin').onclick=()=>{
+      const email=document.getElementById('authEmail').value.trim();
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){authNotice.textContent='Enter a valid email address.';authNotice.classList.remove('hidden');return;}
+      authNotice.textContent='Email UI is ready. Secure passwordless email codes require an authentication service/backend, so this demo does not pretend to send a code.';
+      authNotice.classList.remove('hidden');
+    };
+    document.getElementById('logoutBtn').onclick=()=>{localStorage.setItem(AUTH_KEY,JSON.stringify({mode:'guest'}));updateAccountUI();closeSettings();};
+    document.getElementById('exportChatsBtn').onclick=()=>{
+      const blob=new Blob([JSON.stringify(chats,null,2)],{type:'application/json'}), a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);a.download='crown-ai-chats.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+    };
+    document.getElementById('clearChatsBtn').onclick=()=>{
+      if(confirm('Clear all local chats?')){chats=[];activeId='';persist();ensureChat();renderAll();}
+    };
+    setTimeout(()=>crownSplash.classList.add('hide'),1250);
+    updateAccountUI();
+
+    try{
+      const savedTheme=localStorage.getItem(KEYS.theme);
+      applyTheme(savedTheme || (matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
+      ensureChat(); renderAll(); autoGrow();
+    }catch(e){
+      console.error(e);
+      els.inner.innerHTML='<div class="m-6 rounded-xl bg-red-50 p-4 text-red-700">App initialization failed. Clear site storage and reload.</div>';
+    }finally{
+      els.loading.style.display='none';
+    }
+  })();
+  </script>
+</body>
+</html>

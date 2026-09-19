@@ -1,0 +1,42 @@
+CROWN AI — ACTIVE ON EVERY DEVICE
+
+IMPORTANT
+The API key you pasted in chat should be revoked and replaced with a NEW key.
+Do NOT put the new key inside index.html, worker.js, GitHub, or wrangler.jsonc.
+
+1) CLOUDFLARE WORKER
+- Open Cloudflare Dashboard -> Workers & Pages -> Create Worker.
+- Paste the contents of worker.js into the Worker and deploy it.
+- Worker -> Settings -> Variables and Secrets -> Add.
+- Name: OPENROUTER_API_KEY
+- Type: Secret
+- Value: paste your NEW OpenRouter API key.
+- Deploy.
+
+2) COPY YOUR WORKER URL
+Example:
+https://crown-ai-backend.YOUR-SUBDOMAIN.workers.dev
+
+3) CROWN AI WEBSITE
+- Open index.html locally once, or publish it to GitHub Pages.
+- Open Crown AI -> Settings.
+- In "Crown AI Backend", paste the Worker URL.
+- Save Settings.
+
+IMPORTANT FOR ALL DEVICES:
+For a truly zero-setup public link, put your Worker URL directly into the DEFAULT_BACKEND constant in index.html before publishing.
+Search index.html for:
+const DEFAULT_BACKEND=''
+and put the URL between the quotes.
+
+4) GITHUB PAGES
+Upload:
+index.html
+assets/
+README.md
+.nojekyll
+
+Do NOT upload any API key.
+
+5) TEST
+Open the GitHub Pages URL in an incognito window or another phone and send a message.
